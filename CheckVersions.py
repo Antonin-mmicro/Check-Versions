@@ -37,7 +37,7 @@ cols = 3
 
 options = ["Chrome", "Firefox", "Microsoft Edge", "RustDesk", "NextCloud", "Malwarebytes", "ESET Endpoint Security", 
            "ESET Full Disk Encryption for Windows", "OnlyOffice", "BleachBit", "Adobe Acrobat Reader", "AnyDesk", "Dell Support Assist", 
-           "Veeam Agent For Microsoft Windows", "7-Zip", "Open VPN Connect",]
+           "Veeam Agent For Microsoft Windows", "7-Zip", "Open VPN Connect", "VLC",]
 vars = []
 
 #Navigateur
@@ -82,6 +82,9 @@ urlveeam = "https://www.veeam.com/products/downloads/latest-version.html"
 #File Manager
 install7zip = r"(Get-Item 'C:\Program Files\7-Zip\7zFM.exe').VersionInfo.ProductVersion"
 url7zip = "https://api.github.com/repos/ip7z/7zip/releases/latest"
+installvlc = r'(Get-Item "C:\Program Files\VideoLAN\VLC\vlc.exe").VersionInfo.ProductVersion -replace ",", "."'
+urlvlc = "https://www.videolan.org/vlc/releases/"
+
 
 #VPN
 installopenvpn = r"(Get-Item 'C:\Program Files\OpenVPN Connect\OpenVPNConnect.exe').VersionInfo.ProductVersion"
@@ -103,6 +106,7 @@ url_commands = {
     "Veeam Agent For Microsoft Windows": urlveeam,
     "7-Zip": url7zip,
     "Open VPN Connect": urlopenvpn,
+    "VLC": urlvlc,
 }
 
 install_commands = {
@@ -121,6 +125,7 @@ install_commands = {
     "Veeam Agent For Microsoft Windows": installveeam,
     "7-Zip": install7zip,
     "Open VPN Connect": installopenvpn,
+    "VLC": installvlc,
 }
 
 cols = 3
@@ -488,6 +493,15 @@ def update_version(app_name):
                         return Version(m.group(1))
 
                 return "Version introuvable"
+    
+        elif app_name == "VLC":
+            
+            url = urlvlc
+            r = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=20)
+            first_link = BeautifulSoup(r.text, "html.parser").find("h2").find_next("a")
+            m = re.search(r"(\d+\.\d+\.\d+)", first_link.get_text())
+            version = Version(m.group(1)) if m else "Version introuvable"
+            return version
 
 
     else:
