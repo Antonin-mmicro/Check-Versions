@@ -277,7 +277,6 @@ def get_dell_support_assist():
         latest_raw = fetch_latest_from_dell()
         latest_norm = normalize(latest_raw, keep_build=args.keep_build)
 
-        # Verdict: only compare setup vs online and print simple result
         if setup_norm and latest_norm:
             cmp = cmp_versions(setup_norm, latest_norm)
             if cmp == 0:
