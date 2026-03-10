@@ -269,8 +269,7 @@ def get_dell_support_assist():
             installers = find_installer(whole=args.all)
 
         if not installers:
-            return ("⚠️ | Dell Support Assist | Application non installé / Setup supprimé")
-            sys.exit(1)
+            return (Fore.YELLOW + "⚠️ | Dell Support Assist | Application non installé / Setup supprimé\n")
 
         chosen = installers[0]
         setup_raw = get_file_version(chosen)
